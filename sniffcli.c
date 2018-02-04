@@ -14,7 +14,7 @@ main (int argc, char *argv[]) {
     char line[MAX_STAT_FILE_LENGTH];
     FILE *file;
     struct packet_tree *tree_ptr = NULL;
-    unsigned int ip;
+    uint32_t ip;
     int res_scan = 0;
     short int is_tree = 0; /*check if we have a binary tree or need to make/re-make it*/
     struct sockaddr_in sa;
@@ -33,7 +33,7 @@ main (int argc, char *argv[]) {
             }
 
             while (fgets(line, MAX_STAT_FILE_LENGTH, file) != NULL) {
-                res_scan = sscanf(line, "%s %d;", iface, &ip);
+                res_scan = sscanf(line, "%s %u;", iface, &ip);
                 if (res_scan < 2) {
                     printf(">> Skiped broken line\n");
                     continue;
@@ -168,7 +168,7 @@ main (int argc, char *argv[]) {
 
 
 struct packet_tree
-*init (char *iface, unsigned int addr) {
+*init (char *iface, uint32_t addr) {
     struct packet_tree *new_tree = (struct packet_tree *)malloc(sizeof(struct packet_tree));
     new_tree->ip = addr;
     new_tree->packets[0].count = 1; /* add the counter of packets and name of the interface that received them */
@@ -181,7 +181,7 @@ struct packet_tree
 }
 
 struct packet_tree
-*insert (struct packet_tree *ptree, char *iface, unsigned int addr) {
+*insert (struct packet_tree *ptree, char *iface, uint32_t addr) {
     if (ptree == NULL) {
         ptree = init(iface, addr);
     } else if (ptree->ip == addr) {
@@ -206,7 +206,7 @@ struct packet_tree
 }
 
 void
-search (struct packet_tree *ptree, unsigned int addr) {
+search (struct packet_tree *ptree, uint32_t addr) {
     if (ptree == NULL) {
         printf(">> No packets found \n");
         return;

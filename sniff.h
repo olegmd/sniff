@@ -37,7 +37,7 @@ typedef struct { /* to keep the number of packets per interface, store iface nam
 } t_iface_c;
 
 struct packet_tree {
-    unsigned int ip;
+    uint32_t ip;
     t_iface_c packets[MAX_IFACES];
     struct packet_tree *left, *right;
 };
@@ -56,11 +56,11 @@ int get_iface_name(char *device);
 void callback(u_char* iface, const struct pcap_pkthdr* pkthdr, const u_char* packet);
 
 /* sniff CLI */
-struct packet_tree *init (char *iface, unsigned int addr);
+struct packet_tree *init (char *iface, uint32_t addr);
 
-struct packet_tree *insert (struct packet_tree *ptree, char *iface, unsigned int addr);
+struct packet_tree *insert (struct packet_tree *ptree, char *iface, uint32_t addr);
 
-void search (struct packet_tree *ptree, unsigned int addr);
+void search (struct packet_tree *ptree, uint32_t addr);
 
 void traverse(struct packet_tree *ptree, char *iface);
 
