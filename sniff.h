@@ -1,17 +1,23 @@
 #include <pcap.h>
 
-#define DEFAULT_INTERFACE "eth0"
+#define DEFAULT_INTERFACE "wlan0"
+#define DEFAULT_PORT 9999
+#define SOCK_ADDR "127.0.0.1"
 #define FILTER_LENGH 32
+#define FILTER_COND 10
 #define MAX_IFACE_LENGTH 16
 #define SIZE_ETHERNET 14
 #define IP_HL(ip) (((ip)->ip_vhl) & 0x0f)
 #define DATA_FILE "/var/tmp/sniff.log"
+#define LOG_FILE "/var/tmp/sniff.debug"
 #define CONFIG_FILE "/usr/local/etc/sniff.cfg"
 #define PID_FILE "/run/sniff.pid"
 #define MAX_IFACES 8
 #define MAX_COMMAND_LENGTH 64
 #define MAX_STAT_FILE_LENGTH 64
 #define FULL_LIST "ALL"
+#define BUFFER 256
+#define MSG 262144
 
 
 /* https://www.tcpdump.org/pcap.html */
@@ -43,25 +49,29 @@ struct packet_tree {
 };
 
 /* sniff daemon */
-void sig_handler(int signo);
-
-int create_pid_file(pid_t pid);
-
-int is_running(void);
 
 int get_iface_addr(char *iface, char *filter_addr, char *errbuf);
 
-int get_iface_name(char *device);
-
 void callback(u_char* iface, const struct pcap_pkthdr* pkthdr, const u_char* packet);
 
-/* sniff CLI */
-struct packet_tree *init (char *iface, uint32_t addr);
+void *capture_loop(void *start);
 
-struct packet_tree *insert (struct packet_tree *ptree, char *iface, uint32_t addr);
+void *listener(void *someargs);
 
-void search (struct packet_tree *ptree, uint32_t addr);
+int prepare_capture(char *device);
 
-void traverse(struct packet_tree *ptree, char *iface);
+struct packet_tree *read_tree_from_file();
+
+void print_help ();
+
+struct packet_tree *init(char *iface, uint32_t addr);
+
+struct packet_tree *insert(struct packet_tree *ptree, char *iface, uint32_t addr);
+
+void search(struct packet_tree *ptree, uint32_t addr, char *buffer);
+
+void traverse(struct packet_tree *ptree, char *iface, char *buffer);
 
 void traverse_and_free(struct packet_tree *ptree);
+
+void dump_log(char *message);

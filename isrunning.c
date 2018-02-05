@@ -11,6 +11,15 @@ Is used by both daemon & CLI
 
 int
 is_running(void) {
+   time_t rawtime;
+   struct tm *info;
+   char buffer[80];
+   time( &rawtime );
+
+   info = localtime( &rawtime );
+
+   strftime(buffer,80,"%x - %I:%M%p", info);
+   printf("Formatted date & time : |%s|\n", buffer );
 	char line[8];
     int pid = 0;
     FILE *file;
