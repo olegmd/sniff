@@ -18,8 +18,8 @@
 pcap_t *handle;
 pthread_mutex_t lock;
 pthread_mutex_t lock_d; /*dump_log*/
-int running = 1;
-int configured = 0; /* prepare_capture if 0 */
+volatile int running = 1;
+volatile int configured = 0; /* prepare_capture if 0 */
 char iface_g[MAX_IFACE_LENGTH] = ""; /* iface from `set iface` */
 
 
